@@ -37,8 +37,42 @@
     </div>
     <div>
         <div class="row">
+            <!-- Adding a new input field for username -->
             <form class="form-inline">
-                <div class="form-group>
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" class="form-control" placeholder="Enter your name">
+                </div>
+            </form>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label for="status">Status:</label>
+                <button id="online" class="btn btn-success">Online</button>
+                <button id="dnd" class="btn btn-warning">Do Not Disturb</button>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Users & Status</h3>
+                <table id="statusTable" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="statusList">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <form class="form-inline">
+                <div class="form-group">
                     <label for="body">Message:</label>
                     <input type="text" id="body" class="form-control" placeholder="Your message here...">
                 </div>
