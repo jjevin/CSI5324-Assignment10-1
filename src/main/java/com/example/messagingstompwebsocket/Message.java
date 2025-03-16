@@ -1,26 +1,27 @@
 package com.example.messagingstompwebsocket;
 
-import java.util.UUID;
-
 public class Message {
 
-    private String body;
-	private String name = UUID.randomUUID().toString();
+    private String sender;
+	private String body;
+    private String status;
 
 	public Message() {
 	}
 
-    public Message(String body) {
+    public Message(String sender, String body, String status) {
+        this.sender = sender;
         this.body = body;
+        this.status = status;
     }
 
-	public String getName() {
-		return name;
-	}
+    public String getSender() {
+        return sender;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
 
 	public String getBody() {
 		return body;
@@ -29,4 +30,12 @@ public class Message {
 	public void setBody(String body) {
 		this.body = body;
 	}
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }
