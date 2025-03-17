@@ -57,9 +57,18 @@ function setConnected(connected) {
 
 function connect() {
     stompClient.activate();
+    setStatus("Online");
 }
 
 function disconnect() {
+    var username = document.getElementById("username").value.trim();
+    
+    if (username !== "") {
+        usersStatusMap[username] = "Offline"; 
+        updateStatusList([]);
+        sendStatusUpdate("Offline");
+    }
+
     stompClient.deactivate();
     setConnected(false);
     console.log("Disconnected");
@@ -94,7 +103,7 @@ function sendMessage() {
 
 function showPost(message) {
     if (message.status !== "Do Not Disturb") {
-        let statusColor = message.status === "Online" ? "#5cb85c" : "#f0ad4e"; 
+        let statusColor = message.status === "Online" ? "#5cb85c" : message.status === "Do Not Disturb" ? "#f0ad4e" : "#6c757d";
         
         $("#posts").append(`
             <tr>
@@ -107,29 +116,38 @@ function showPost(message) {
     }
 }
 
+let usersStatusMap = {};
+
 function updateStatusList(statuses) {
     $("#statusList").html(""); // Clear existing list
 
     statuses.forEach((user) => {
-        let statusColor = user.status === "Online" ? "#5cb85c" : "#f0ad4e"; 
-        $("#statusList").append(
-            `<li class="user-status">
+        usersStatusMap[user.sender] = user.status;
+    });
+
+    Object.keys(usersStatusMap).forEach((username) => {
+        let status = usersStatusMap[username] || "Offline";
+        let statusColor = status === "Online" ? "#5cb85c" : status === "Do Not Disturb" ? "#f0ad4e" : "#6c757d";
+
+        $("#statusList").append(`
+            <li class="user-status" data-username="${username}">
                 <span class="status-dot" style="background-color: ${statusColor};"></span>
-                <b>${user.sender}</b> - ${user.status}
-            </li>`
-        );
+                <b>${username}</b> - ${status}
+            </li>
+        `);
     });
 
     updatePostStatuses(statuses);
 }
 
 function updatePostStatuses(statuses) {
-    statuses.forEach((user) => {
-        let statusColor = user.status === "Online" ? "#5cb85c" : "#f0ad4e";
+    Object.keys(usersStatusMap).forEach((username) => {
+        let status = usersStatusMap[username] || "Offline";
+        let statusColor = status === "Online" ? "#5cb85c" : status === "Do Not Disturb" ? "#f0ad4e" : "#6c757d";
         
         $("#posts tr").each(function () {
             let postText = $(this).find("b").text().replace(":", "").trim();
-            if (postText === user.sender) {
+            if (postText === username) {
                 $(this).find(".status-dot").css("background-color", statusColor);
             }
         });

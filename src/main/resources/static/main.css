@@ -13,6 +13,13 @@ body {
     border-radius: 5px;
 }
 
+@media (max-width: 1000px) {
+    #main-content {
+        max-width: 100%;
+        padding: 1.5em;
+    }
+}
+
 .status-dot {
     display: inline-block;
     width: 10px;
