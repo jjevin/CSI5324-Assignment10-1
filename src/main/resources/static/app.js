@@ -14,7 +14,9 @@ stompClient.onConnect = (frame) => {
         updateStatusList(JSON.parse(statusUpdate.body));
     });
 
-    sendStatusUpdate("Online"); 
+    sendStatusUpdate("Online");
+
+    updateVisibility(true); // unide information on connect.
 };
 
 function sendStatusUpdate(status) {
@@ -31,6 +33,19 @@ function sendStatusUpdate(status) {
             destination: "/app/status",
             body: JSON.stringify(statusMessage),
         });
+    }
+}
+
+// method for hiding/unhiding information based on connection status.
+function updateVisibility(connected) {
+    if (connected) {
+        $("#status-info, #message-info, #online, #dnd").show();
+        $("#connect").hide();
+        $("#disconnect").show();
+    } else {
+        $("#disconnect").hide();
+        $("#status-info, #message-info").hide();
+        $("#connect").show();
     }
 }
 
@@ -72,6 +87,8 @@ function disconnect() {
     stompClient.deactivate();
     setConnected(false);
     console.log("Disconnected");
+
+    updateVisibility(false); // re-hide information.
 }
 
 function sendMessage() {
@@ -165,4 +182,6 @@ $(function () {
     $("#send").click(() => sendMessage());
     $("#online").click(() => setStatus("Online"));
     $("#dnd").click(() => setStatus("Do Not Disturb"));
+
+    $("#status-info, #message-info, #online, #dnd, #disconnect").hide(); // set default to hide information until connected.
 });
