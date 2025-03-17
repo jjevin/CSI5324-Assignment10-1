@@ -94,14 +94,45 @@ function sendMessage() {
 
 function showPost(message) {
     if (message.status !== "Do Not Disturb") {
-        $("#posts").append("<tr><td><b>" + message.sender + ":</b> " + message.body + "</td></tr>");
+        let statusColor = message.status === "Online" ? "#5cb85c" : "#f0ad4e"; 
+        
+        $("#posts").append(`
+            <tr>
+                <td>
+                    <span class="status-dot" style="background-color: ${statusColor};"></span>
+                    <b>${message.sender}:</b> ${message.body}
+                </td>
+            </tr>
+        `);
     }
 }
 
 function updateStatusList(statuses) {
     $("#statusList").html(""); // Clear existing list
+
     statuses.forEach((user) => {
-        $("#statusList").append("<tr><td><b>" + user.sender + "</b>: " + user.status + "</td></tr>");
+        let statusColor = user.status === "Online" ? "#5cb85c" : "#f0ad4e"; 
+        $("#statusList").append(
+            `<li class="user-status">
+                <span class="status-dot" style="background-color: ${statusColor};"></span>
+                <b>${user.sender}</b> - ${user.status}
+            </li>`
+        );
+    });
+
+    updatePostStatuses(statuses);
+}
+
+function updatePostStatuses(statuses) {
+    statuses.forEach((user) => {
+        let statusColor = user.status === "Online" ? "#5cb85c" : "#f0ad4e";
+        
+        $("#posts tr").each(function () {
+            let postText = $(this).find("b").text().replace(":", "").trim();
+            if (postText === user.sender) {
+                $(this).find(".status-dot").css("background-color", statusColor);
+            }
+        });
     });
 }
 
