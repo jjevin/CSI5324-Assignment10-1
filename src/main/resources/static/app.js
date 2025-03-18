@@ -29,6 +29,12 @@ function sendStatusUpdate(status) {
             status: status
         };
 
+        if (status == "Do Not Disturb") {
+            $("#post-info, #message-info").hide();
+        } else {
+            $("#post-info, #message-info").show();
+        }
+
         stompClient.publish({
             destination: "/app/status",
             body: JSON.stringify(statusMessage),
@@ -102,7 +108,7 @@ function sendMessage() {
 
     if (messageContent !== "") {
         var userStatus = $("#statusList").find("b:contains('" + username + "')").parent().text().split(": ")[1] || "Online";
-        
+
         var chatMessage = {
             sender: username,
             body: messageContent,
@@ -119,18 +125,16 @@ function sendMessage() {
 }
 
 function showPost(message) {
-    if (message.status !== "Do Not Disturb") {
-        let statusColor = message.status === "Online" ? "#5cb85c" : message.status === "Do Not Disturb" ? "#f0ad4e" : "#6c757d";
-        
-        $("#posts").append(`
-            <tr>
-                <td>
-                    <span class="status-dot" style="background-color: ${statusColor};"></span>
-                    <b>${message.sender}:</b> ${message.body}
-                </td>
-            </tr>
-        `);
-    }
+    let statusColor = message.status === "Online" ? "#5cb85c" : message.status === "Do Not Disturb" ? "#f0ad4e" : "#6c757d";
+
+    $("#posts").append(`
+        <tr>
+            <td>
+                <span class="status-dot" style="background-color: ${statusColor};"></span>
+                <b>${message.sender}:</b> ${message.body}
+            </td>
+        </tr>
+    `);
 }
 
 let usersStatusMap = {};
